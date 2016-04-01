@@ -2,6 +2,26 @@
 
 Still under development. A RSS reader that, for the moment, only works with Tumblr blogs.
 
+## Usage
+
+```go
+articles, err := rssreader.Setup(rssreader.Config{
+	RSSURL:   "http://blog.largentfuels.com/rss",
+	MaxItems: 3,
+}).ReadFeed()
+
+if err != nil {
+	fmt.Println(err.Error())
+	return
+}
+
+for _, v := range articles {
+	fmt.Println("Title:", v.Title)
+	fmt.Println("Content:", v.Content)
+	fmt.Println()
+}
+```
+
 ## TODO
 
 * [ ] Parse the rest of the content into the correspondent structs or pointers

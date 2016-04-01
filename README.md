@@ -1,6 +1,6 @@
 # `rss-reader`
 
-Still under development
+Still under development. A RSS reader that, for the moment, only works with Tumblr blogs.
 
 ## TODO
 

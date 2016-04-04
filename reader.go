@@ -34,12 +34,18 @@ var (
 	ErrCantParseResponse = errors.New("rssreader: can't parse xml format")
 )
 
+// RSS is a struct that holds the RSS reader config
+// plus the caching configuration
 type RSS struct {
 	config   Config
 	cache    *cash.Cash
 	cachekey string
 }
 
+// Config is the struct that holds the Configuration,
+// such as the RSS URL we'll fetch, the number of items
+// we want to retrieve from the feed, the minimum image
+// width or height and wether we use cache or not.
 type Config struct {
 	RSSURL         string
 	MaxItems       int
@@ -78,6 +84,11 @@ func Setup(c Config) *RSS {
 	}
 }
 
+// ReadFeed performs the RSS reading and processing.
+// The function will check first wether the process
+// will use a cache, if so, it'll check if the articles
+// are already in cache, and if not, it'll fetch them and
+// store them for later use.
 func (r *RSS) ReadFeed() ([]*Article, error) {
 	// Check if the info is in cache already
 	if r.cachekey != "" {

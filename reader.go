@@ -15,6 +15,9 @@ import (
 	"github.com/patrickdappollonio/image-extractor"
 )
 
+// Article is a single article which contains all the
+// information of an RSS article, as well as the content
+// in HTML and in raw (with HTML tags stripped)
 type Article struct {
 	Title        string
 	ContentHTML  template.HTML
@@ -31,7 +34,7 @@ var (
 	ErrCantParseResponse = errors.New("rssreader: can't parse xml format")
 )
 
-type rss struct {
+type RSS struct {
 	config   Config
 	cache    *cash.Cash
 	cachekey string
@@ -47,7 +50,9 @@ type Config struct {
 
 const defaultExpiration = 24 * time.Hour
 
-func Setup(c Config) *rss {
+// Setup creates a single instance of an RSS reader with
+// a specific configuration given.
+func Setup(c Config) *RSS {
 	var cache *cash.Cash
 	var cachekey string
 
@@ -66,14 +71,14 @@ func Setup(c Config) *rss {
 		)
 	}
 
-	return &rss{
+	return &RSS{
 		config:   c,
 		cache:    cache,
 		cachekey: cachekey,
 	}
 }
 
-func (r *rss) ReadFeed() ([]*Article, error) {
+func (r *RSS) ReadFeed() ([]*Article, error) {
 	// Check if the info is in cache already
 	if r.cachekey != "" {
 		if data, ok := r.cache.Get(r.cachekey); ok {

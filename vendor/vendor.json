@@ -1,0 +1,37 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "ULwlWgy+8bjEzH6UpB4b7XYAIS4=",
+			"path": "github.com/daryl/cash",
+			"revision": "0cc867cf30758029421e9958774f39a67bfea88d",
+			"revisionTime": "2015-01-15T01:17:27Z"
+		},
+		{
+			"checksumSHA1": "6f60v0GisRirRssO0XIslr/xOaQ=",
+			"path": "github.com/kennygrant/sanitize",
+			"revision": "ce9fd1f6ce32afaa38b51feea32320fc8875e8e4",
+			"revisionTime": "2015-10-03T19:43:56Z"
+		},
+		{
+			"checksumSHA1": "AloEZVUKbZ5+j05hmeDqDr/pHbA=",
+			"path": "github.com/patrickdappollonio/image-extractor",
+			"revision": "3e7253d6e4b1f1299ca49187493488268a100076",
+			"revisionTime": "2015-03-18T05:04:30Z"
+		},
+		{
+			"checksumSHA1": "vqc3a+oTUGX8PmD0TS+qQ7gmN8I=",
+			"path": "golang.org/x/net/html",
+			"revision": "024ed629fd292398cfd43c9678a5bf004f7defdc",
+			"revisionTime": "2016-04-03T19:24:15Z"
+		},
+		{
+			"checksumSHA1": "00eQaGynDYrv3tL+C7l9xH0IDZg=",
+			"path": "golang.org/x/net/html/atom",
+			"revision": "024ed629fd292398cfd43c9678a5bf004f7defdc",
+			"revisionTime": "2016-04-03T19:24:15Z"
+		}
+	],
+	"rootPath": "bitbucket.org/patrickdappollonio/rss-reader"
+}

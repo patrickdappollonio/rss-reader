@@ -1,6 +1,11 @@
 # `rss-reader`
 
-Still under development. A RSS reader that, for the moment, only works with Tumblr blogs.
+An RSS reader that, for the moment, only works with Tumblr blogs. It also fetches
+all the images within the content and pick the most appropiate one based on a minimum
+width or height.
+
+As a recommendation, it's better to use this package with caching enabled, since if there's
+any RSS with several images, you'll ended up using a bit of bandwidth.
 
 ### Usage
 

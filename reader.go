@@ -8,7 +8,7 @@
 // Usage:
 //
 //	 getter := Setup(Config{
-//	 	RSSURL:        "http://blog.largentfuels.com/rss",
+//	 	RSSURL:        "http://your.blog.here/rss",
 //	 	MaxItems:      3,
 //	 	MinImageWidth: 200,
 //	 	UseCache:      true,

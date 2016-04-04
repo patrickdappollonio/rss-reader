@@ -3,14 +3,21 @@ package rssreader
 import (
 	"encoding/xml"
 	"errors"
+	"fmt"
+	"html/template"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/daryl/cash"
+	"github.com/kennygrant/sanitize"
+	"github.com/patrickdappollonio/image-extractor"
 )
 
 type Article struct {
 	Title        string
+	ContentHTML  template.HTML
 	Content      string
 	Published    time.Time
 	URL          *url.URL
@@ -25,19 +32,48 @@ var (
 )
 
 type rss struct {
-	config Config
+	config   Config
+	cache    *cash.Cash
+	cachekey string
 }
 
 type Config struct {
-	RSSURL   string
-	MaxItems int
+	RSSURL         string
+	MaxItems       int
+	MinImageWidth  int
+	MinImageHeight int
+	UseCache       bool
 }
 
+const defaultExpiration = 24 * time.Hour
+
 func Setup(c Config) *rss {
-	return &rss{config: c}
+	var cache *cash.Cash
+	var cachekey string
+
+	if c.UseCache {
+		cache = cash.New(cash.Conf{
+			defaultExpiration,
+			defaultExpiration,
+		})
+		cachekey = fmt.Sprintf("%v-%v", c.RSSURL, c.MaxItems)
+	}
+
+	return &rss{
+		config:   c,
+		cache:    cache,
+		cachekey: cachekey,
+	}
 }
 
 func (r *rss) ReadFeed() ([]*Article, error) {
+	// Check if the info is in cache already
+	if r.cachekey != "" {
+		if data, ok := r.cache.Get(r.cachekey); ok {
+			return data.([]*Article), nil
+		}
+	}
+
 	// Shorthand
 	web := r.config.RSSURL
 
@@ -82,15 +118,41 @@ func (r *rss) ReadFeed() ([]*Article, error) {
 
 	// Create an empty list
 	var list []*Article
+	var selectedOne, articleURL *url.URL
+	var parsedDate time.Time
 
 	// Iterate over the items
 	for _, v := range xmlresponse.Channel.Items {
 		if len(list) < r.config.MaxItems {
+			// Select the best image
+			selectedOne = selectBestImage(
+				r.config.MinImageWidth,
+				r.config.MinImageHeight,
+				extractor.ImageExtractor{Content: v.Description}.GetAll(),
+			)
+
+			// Parse date, if is not correctly parsed, a
+			// zero-value is set
+			parsedDate, _ = time.Parse(time.RFC1123Z, v.PubDate)
+
+			// Parse the article URL, trusting the address is right
+			articleURL, _ = url.Parse(v.Link)
+
+			// Append to the list
 			list = append(list, &Article{
-				Title:   v.Title,
-				Content: v.Description,
+				Title:        v.Title,
+				ContentHTML:  template.HTML(v.Description),
+				Content:      strings.TrimSpace(sanitize.HTML(v.Description)),
+				PreviewImage: selectedOne,
+				URL:          articleURL,
+				Published:    parsedDate,
 			})
 		}
+	}
+
+	// Save to cache
+	if r.cachekey != "" {
+		r.cache.Set(r.cachekey, list, cash.Default)
 	}
 
 	return list, nil

@@ -33,6 +33,9 @@ for _, v := range articles {
 
 ### Benchmarks with cache and no cache
 
+For cache, the package uses an in-memory cache implementation with a single record and a
+default expiration of 24 hours —meaning the RSS items are going to be cached for 24 hours—.
+
 ```
 PASS
 BenchmarkWithCache-8  	20000000	        74.5 ns/op

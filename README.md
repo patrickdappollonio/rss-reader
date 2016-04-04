@@ -1,5 +1,7 @@
 # `rss-reader`
 
+[![GoDoc](https://godoc.org/github.com/patrickdappollonio/rss-reader?status.svg)](https://godoc.org/github.com/patrickdappollonio/rss-reader)
+
 An RSS reader that, for the moment, only works with Tumblr blogs. It also fetches
 all the images within the content and pick the most appropiate one based on a minimum
 width or height.

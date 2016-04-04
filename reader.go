@@ -56,7 +56,14 @@ func Setup(c Config) *rss {
 			defaultExpiration,
 			defaultExpiration,
 		})
-		cachekey = fmt.Sprintf("%v-%v", c.RSSURL, c.MaxItems)
+
+		cachekey = fmt.Sprintf(
+			"%v-%v-%v-%v",
+			c.RSSURL,
+			c.MaxItems,
+			c.MinImageWidth,
+			c.MinImageHeight,
+		)
 	}
 
 	return &rss{

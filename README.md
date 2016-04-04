@@ -2,7 +2,7 @@
 
 Still under development. A RSS reader that, for the moment, only works with Tumblr blogs.
 
-## Usage
+### Usage
 
 ```go
 articles, err := rssreader.Setup(rssreader.Config{
@@ -24,4 +24,13 @@ for _, v := range articles {
 	fmt.Println("Published at:", v.Published)
 	fmt.Println()
 }
+```
+
+### Benchmarks with cache and no cache
+
+```
+PASS
+BenchmarkWithCache-8  	20000000	        74.5 ns/op
+BenchmarkWithNoCache-8	       5	 289574604 ns/op
+ok  	github.com/patrickdappollonio/rss-reader	5.272s
 ```

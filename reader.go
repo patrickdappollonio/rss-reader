@@ -46,6 +46,8 @@ type Article struct {
 
 var (
 	ErrNoURLProvided     = errors.New("rssreader: no url provided")
+	ErrNotInitialized    = errors.New("rssreader: not initialized")
+	ErrNeededAbsURL      = errors.New("rssreader: relative url provided")
 	ErrMalformedURL      = errors.New("rssreader: malformed url")
 	ErrCantConnect       = errors.New("rssreader: can't connect to the given url")
 	ErrCantParseResponse = errors.New("rssreader: can't parse xml format")
@@ -107,6 +109,10 @@ func Setup(c Config) *RSS {
 // are already in cache, and if not, it'll fetch them and
 // store them for later use.
 func (r *RSS) ReadFeed() ([]*Article, error) {
+	if r == nil {
+		return nil, ErrNotInitialized
+	}
+
 	// Check if the info is in cache already
 	if r.cachekey != "" {
 		if data, ok := r.cache.Get(r.cachekey); ok {
@@ -122,9 +128,17 @@ func (r *RSS) ReadFeed() ([]*Article, error) {
 		return nil, ErrNoURLProvided
 	}
 
+	// URL holder
+	parsedURL, err := url.ParseRequestURI(web)
+
 	// Try parse the URL
-	if _, err := url.Parse(web); err != nil {
+	if err != nil {
 		return nil, ErrMalformedURL
+	}
+
+	// Check if the URL was absolute
+	if !parsedURL.IsAbs() {
+		return nil, ErrNeededAbsURL
 	}
 
 	// Fetch the RSS content
